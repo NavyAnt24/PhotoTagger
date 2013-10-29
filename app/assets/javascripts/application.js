@@ -12,4 +12,26 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require underscore
+//= require jquery.serializeJSON
+//= require_tree ./views
+//= require_tree ./models
+//= require_tree ../templates
 //= require_tree .
+
+(function(root) {
+	var PT = root.PT = (root.PT || {});
+
+	PT.initialize = function() {
+		var userId = JSON.parse($("#current_user_json").html()).id;
+		var photos = PT.Photo.fetchByUserId(userId, function(photos) {
+			var photosView = new PT.PhotosListView();
+			photosView.render(photos);
+			$("#content").prepend(photosView.$el);
+		});
+
+		var formView = new PT.PhotoFormView();
+		formView.render();
+		$("#content").append(formView.$el);
+	};
+})(this);
